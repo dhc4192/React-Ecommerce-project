@@ -34,7 +34,6 @@ export default function RegisterComplete({ history }) {
         let user = auth.currentUser;
         await user.updatePassword(password);
         const idTokenResult = await user.getIdTokenResult();
-
         createUpdateUser(idTokenResult.token)
           .then((res) => {
             dispatch({
@@ -49,12 +48,9 @@ export default function RegisterComplete({ history }) {
             });
           })
           .catch((error) => console.log(error));
-
         history.push("/");
       }
     } catch (error) {
-      console.log(error);
-
       toast.error(error.message);
     }
   };

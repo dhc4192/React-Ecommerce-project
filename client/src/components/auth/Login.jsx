@@ -35,7 +35,6 @@ export default function Login({ history }) {
       const result = await auth.signInWithEmailAndPassword(email, password);
       const { user } = result;
       const idTokenResult = await user.getIdTokenResult();
-
       createUpdateUser(idTokenResult.token)
         .then((res) => {
           dispatch({
@@ -63,7 +62,6 @@ export default function Login({ history }) {
       .then(async (result) => {
         const { user } = result;
         const idTokenResult = await user.getIdTokenResult();
-
         createUpdateUser(idTokenResult.token)
           .then((res) => {
             dispatch({

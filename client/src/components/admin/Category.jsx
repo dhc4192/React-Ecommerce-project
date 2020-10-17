@@ -9,7 +9,6 @@ import {
   deleteCategory,
 } from "../../services/category";
 import AdminNav from "../nav/AdminNav";
-import Search from "../forms/Search";
 
 export default function Category() {
   const { user } = useSelector((state) => ({ ...state }));
@@ -53,6 +52,11 @@ export default function Category() {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearchName(e.target.value.toLowerCase());
+  };
+
   const searched = (searchName) => (category) =>
     category.name.toLowerCase().includes(searchName);
 
@@ -72,7 +76,12 @@ export default function Category() {
           />
           <button type="submit">Save</button>
         </form>
-        <Search searchName={searchName} setSearchName={setSearchName} />
+        <input
+          type="search"
+          placeholder="Search"
+          value={searchName}
+          onChange={handleSearch}
+        />
         <hr />
         {categories.filter(searched(searchName)).map((category) => (
           <div key={category._id}>
