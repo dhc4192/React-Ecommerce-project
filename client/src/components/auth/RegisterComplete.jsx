@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../../firebase";
+import { createUpdateUser } from "../../services/auth";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { auth } from "../../firebase";
 
 export default function RegisterComplete({ history }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  let dispatch = useDispatch();
 
   useEffect(() => {
     setEmail(window.localStorage.getItem("emailForRegistration"));
@@ -31,6 +35,21 @@ export default function RegisterComplete({ history }) {
         await user.updatePassword(password);
         const idTokenResult = await user.getIdTokenResult();
 
+        createUpdateUser(idTokenResult.token)
+          .then((res) => {
+            dispatch({
+              type: "LOGGED_IN_USER",
+              payload: {
+                name: res.data.name,
+                email: res.data.email,
+                token: idTokenResult.token,
+                role: res.data.role,
+                _id: res.data._id,
+              },
+            });
+          })
+          .catch((error) => console.log(error));
+
         history.push("/");
       }
     } catch (error) {
@@ -40,28 +59,20 @@ export default function RegisterComplete({ history }) {
     }
   };
 
-  const completeRegistrationForm = () => (
-    <form onSubmit={handleSubmit}>
-      <input type="email" value={email} disabled />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        autoFocus
-      />
-      <button type="submit">Complete Registration</button>
-    </form>
-  );
-
   return (
     <div>
-      <div>
-        <div>
-          <h4>Register Complete</h4>
-          {completeRegistrationForm()}
-        </div>
-      </div>
+      <h4>Register Complete</h4>
+      <form onSubmit={handleSubmit}>
+        <input type="email" value={email} disabled />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          autoFocus
+        />
+        <button type="submit">Complete Registration</button>
+      </form>
     </div>
   );
 }

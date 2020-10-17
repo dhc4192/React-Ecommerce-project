@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../../firebase";
-import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { auth } from "../../firebase";
 
 export default function ForgotPassword({ history }) {
   const [email, setEmail] = useState("");
@@ -14,7 +14,7 @@ export default function ForgotPassword({ history }) {
     if (user && user.token) {
       history.push("/");
     }
-  }, [user]);
+  }, [user, history]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

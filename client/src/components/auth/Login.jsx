@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { auth, googleAuthProvider } from "../../firebase";
-import { toast } from "react-toastify";
+import { createUpdateUser } from "../../services/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { GoogleOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Login({ history }) {
   const [email, setEmail] = useState("");
@@ -17,7 +18,15 @@ export default function Login({ history }) {
     if (user && user.token) {
       history.push("/");
     }
-  }, [user]);
+  }, [user, history]);
+
+  const roleBasedRedirect = (res) => {
+    if (res.data.role === "admin") {
+      history.push("/admin/dashboard");
+    } else {
+      history.push("/user/history");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,14 +36,21 @@ export default function Login({ history }) {
       const { user } = result;
       const idTokenResult = await user.getIdTokenResult();
 
-      dispatch({
-        type: "LOGGED_IN_USER",
-        payload: {
-          email: user.email,
-          token: idTokenResult.token,
-        },
-      });
-      history.push("/");
+      createUpdateUser(idTokenResult.token)
+        .then((res) => {
+          dispatch({
+            type: "LOGGED_IN_USER",
+            payload: {
+              name: res.data.name,
+              email: res.data.email,
+              token: idTokenResult.token,
+              role: res.data.role,
+              _id: res.data._id,
+            },
+          });
+          roleBasedRedirect(res);
+        })
+        .catch((error) => console.log(error));
     } catch (error) {
       toast.error(error.message);
       setLoading(false);
@@ -47,43 +63,47 @@ export default function Login({ history }) {
       .then(async (result) => {
         const { user } = result;
         const idTokenResult = await user.getIdTokenResult();
-        dispatch({
-          type: "LOGGED_IN_USER",
-          payload: {
-            email: user.email,
-            token: idTokenResult.token,
-          },
-        });
-        history.push("/");
+
+        createUpdateUser(idTokenResult.token)
+          .then((res) => {
+            dispatch({
+              type: "LOGGED_IN_USER",
+              payload: {
+                name: res.data.name,
+                email: res.data.email,
+                token: idTokenResult.token,
+                role: res.data.role,
+                _id: res.data._id,
+              },
+            });
+            roleBasedRedirect(res);
+          })
+          .catch((error) => console.log(error));
       })
       .catch((error) => toast.error(error.message));
   };
 
-  const loginForm = () => (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="E-mail"
-        autoFocus
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit" disabled={!email || password.length < 6}>
-        Log In
-      </button>
-    </form>
-  );
-
   return (
     <div>
       {loading ? <h4>Welcome Back!</h4> : <h4>Log In</h4>}
-      {loginForm()}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="E-mail"
+          autoFocus
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <button type="submit" disabled={!email || password.length < 6}>
+          Log In
+        </button>
+      </form>
       <button onClick={googleLogin}>
         <GoogleOutlined /> | Log in with Google
       </button>

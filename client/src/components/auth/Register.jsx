@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../../firebase";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { auth } from "../../firebase";
 
 export default function Register({ history }) {
   const [email, setEmail] = useState("");
@@ -12,7 +12,7 @@ export default function Register({ history }) {
     if (user && user.token) {
       history.push("/");
     }
-  }, [user]);
+  }, [user, history]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,24 +29,21 @@ export default function Register({ history }) {
     setEmail("");
   };
 
-  const registerForm = () => (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <button type="submit" disabled={!email}>
-        Register
-      </button>
-    </form>
-  );
-
   return (
     <div>
       <h4>Register</h4>
-      {registerForm()}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          autoFocus
+        />
+        <button type="submit" disabled={!email}>
+          Register
+        </button>
+      </form>
       <p>
         Already have an account? <Link to="/login">Log In</Link>
       </p>
