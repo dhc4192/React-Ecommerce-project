@@ -18,7 +18,7 @@ exports.list = async (req, res) => {
 };
 
 exports.read = async (req, res) => {
-  let category = await Category.findOne({ slug: req.params.slug }).exec();
+  const category = await Category.findOne({ slug: req.params.slug }).exec();
   res.json(category);
 };
 
