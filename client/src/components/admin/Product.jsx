@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import AdminNav from "../nav/AdminNav";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { getProduct, createProduct } from "../../services/product";
+import { createProduct } from "../../services/product";
 import { getCategories, getSubCategories } from "../../services/category";
+import { getBrands } from "../../services/brand";
+import { getFoodTypes } from "../../services/food_type";
+import { getTreatTypes } from "../../services/treat_type";
+import { getSupplyTypes } from "../../services/supply_type";
 import { Select } from "antd";
 
 const { Option } = Select;
@@ -21,7 +25,7 @@ export default function Product() {
     treat_type: "",
     supply_type: "",
     price: "",
-    size: '',
+    size: "",
     shipping: "",
     quantity: "",
     brand: "",
@@ -33,11 +37,29 @@ export default function Product() {
 
   useEffect(() => {
     loadCategories();
+    loadBrands();
+    loadFoodTypes();
+    loadTreatTypes();
+    loadSupplyTypes();
   }, []);
 
   const loadCategories = () =>
     getCategories().then((category) =>
       setValues({ ...values, categories: category.data })
+    );
+  const loadBrands = () =>
+    getBrands().then((brand) => setValues({ ...values, brands: brand.data }));
+  const loadFoodTypes = () =>
+    getFoodTypes().then((food_type) =>
+      setValues({ ...values, food_types: food_type.data })
+    );
+  const loadTreatTypes = () =>
+    getTreatTypes().then((food_type) =>
+      setValues({ ...values, food_types: food_type.data })
+    );
+  const loadSupplyTypes = () =>
+    getSupplyTypes().then((supply_type) =>
+      setValues({ ...values, supply_types: supply_type.data })
     );
 
   const handleSubmit = (e) => {
@@ -70,7 +92,7 @@ export default function Product() {
   return (
     <div>
       <AdminNav />
-      <h4>Create Product</h4>
+      <h4>Add Product</h4>
       <hr />
       <form onSubmit={handleSubmit}>
         <input
@@ -142,7 +164,6 @@ export default function Product() {
               </option>
             ))}
         </select>
-
 
         <label>Shipping: </label>
         <select name="shipping" onChange={handleChange}>

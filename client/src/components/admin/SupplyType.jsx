@@ -4,32 +4,32 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
-  createCategory,
-  getCategories,
-  deleteCategory,
-} from "../../services/category";
+  createSupplyType,
+  getSupplyTypes,
+  deleteSupplyType,
+} from "../../services/supply_type";
 import AdminNav from "../nav/AdminNav";
 
-export default function Category() {
+export default function SupplyType() {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [supplyTypes, setSupplyTypes] = useState([]);
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
-    loadCategories();
+    loadSupplyTypes();
   }, []);
 
-  const loadCategories = () =>
-    getCategories().then((category) => setCategories(category.data));
+  const loadSupplyTypes = () =>
+    getSupplyTypes().then((supply_type) => setSupplyTypes(supply_type.data));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createCategory({ name }, user.token)
+    createSupplyType({ name }, user.token)
       .then((res) => {
         setName("");
         toast.success(`"${res.data.name}" is created`);
-        loadCategories();
+        loadSupplyTypes();
       })
       .catch((error) => {
         console.log(error);
@@ -39,10 +39,10 @@ export default function Category() {
 
   const handleRemove = async (slug) => {
     if (window.confirm("Delete?")) {
-      deleteCategory(slug, user.token)
+      deleteSupplyType(slug, user.token)
         .then((res) => {
           toast.error(`${res.data.name} deleted`);
-          loadCategories();
+          loadSupplyTypes();
         })
         .catch((error) => {
           if (error.response.status === 400) {
@@ -57,20 +57,20 @@ export default function Category() {
     setSearchName(e.target.value.toLowerCase());
   };
 
-  const searched = (searchName) => (category) =>
-    category.name.toLowerCase().includes(searchName);
+  const searched = (searchName) => (supply_type) =>
+    supply_type.name.toLowerCase().includes(searchName);
 
   return (
     <div>
       <AdminNav />
       <div>
-        <h4>Add Category</h4>
+        <h4>Add Supply Type</h4>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             onChange={(e) => setName(e.target.value)}
             value={name}
-            placeholder="Category"
+            placeholder="Supply Type"
             autoFocus
             required
           />
@@ -83,13 +83,13 @@ export default function Category() {
           onChange={handleSearch}
         />
         <hr />
-        {categories.filter(searched(searchName)).map((category) => (
-          <div key={category._id}>
-            {category.name}
-            <span onClick={() => handleRemove(category.slug)}>
+        {supplyTypes.filter(searched(searchName)).map((supplyType) => (
+          <div key={supplyType._id}>
+            {supplyType.name}
+            <span onClick={() => handleRemove(supplyType.slug)}>
               <DeleteOutlined />
             </span>
-            <Link to={`/admin/category/${category.slug}`}>
+            <Link to={`/admin/supply_type/${supplyType.slug}`}>
               <span>
                 <EditOutlined />
               </span>

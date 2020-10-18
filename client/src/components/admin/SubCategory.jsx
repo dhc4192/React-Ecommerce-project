@@ -73,7 +73,7 @@ export default function SubCategory() {
     <div>
       <AdminNav />
       <div>
-        <h4>Create Sub-Category</h4>
+        <h4>Add Sub-Category</h4>
         <div>
           <label>Category: </label>
           <select onChange={(e) => setCategoryRef(e.target.value)}>

@@ -3,33 +3,28 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import {
-  createCategory,
-  getCategories,
-  deleteCategory,
-} from "../../services/category";
+import { createBrand, getBrands, deleteBrand } from "../../services/brand";
 import AdminNav from "../nav/AdminNav";
 
-export default function Category() {
+export default function Brand() {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
-    loadCategories();
+    loadBrands();
   }, []);
 
-  const loadCategories = () =>
-    getCategories().then((category) => setCategories(category.data));
+  const loadBrands = () => getBrands().then((brand) => setBrands(brand.data));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createCategory({ name }, user.token)
+    createBrand({ name }, user.token)
       .then((res) => {
         setName("");
         toast.success(`"${res.data.name}" is created`);
-        loadCategories();
+        loadBrands();
       })
       .catch((error) => {
         console.log(error);
@@ -39,10 +34,10 @@ export default function Category() {
 
   const handleRemove = async (slug) => {
     if (window.confirm("Delete?")) {
-      deleteCategory(slug, user.token)
+      deleteBrand(slug, user.token)
         .then((res) => {
           toast.error(`${res.data.name} deleted`);
-          loadCategories();
+          loadBrands();
         })
         .catch((error) => {
           if (error.response.status === 400) {
@@ -57,20 +52,20 @@ export default function Category() {
     setSearchName(e.target.value.toLowerCase());
   };
 
-  const searched = (searchName) => (category) =>
-    category.name.toLowerCase().includes(searchName);
+  const searched = (searchName) => (brand) =>
+    brand.name.toLowerCase().includes(searchName);
 
   return (
     <div>
       <AdminNav />
       <div>
-        <h4>Add Category</h4>
+        <h4>Add Brand</h4>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             onChange={(e) => setName(e.target.value)}
             value={name}
-            placeholder="Category"
+            placeholder="Brand"
             autoFocus
             required
           />
@@ -83,13 +78,13 @@ export default function Category() {
           onChange={handleSearch}
         />
         <hr />
-        {categories.filter(searched(searchName)).map((category) => (
-          <div key={category._id}>
-            {category.name}
-            <span onClick={() => handleRemove(category.slug)}>
+        {brands.filter(searched(searchName)).map((brand) => (
+          <div key={brand._id}>
+            {brand.name}
+            <span onClick={() => handleRemove(brand.slug)}>
               <DeleteOutlined />
             </span>
-            <Link to={`/admin/category/${category.slug}`}>
+            <Link to={`/admin/brand/${brand.slug}`}>
               <span>
                 <EditOutlined />
               </span>

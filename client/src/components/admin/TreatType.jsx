@@ -4,32 +4,32 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
-  createCategory,
-  getCategories,
-  deleteCategory,
-} from "../../services/category";
+  createTreatType,
+  getTreatTypes,
+  deleteTreatType,
+} from "../../services/treat_type";
 import AdminNav from "../nav/AdminNav";
 
-export default function Category() {
+export default function TreatType() {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [treatTypes, setTreatTypes] = useState([]);
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
-    loadCategories();
+    loadTreatTypes();
   }, []);
 
-  const loadCategories = () =>
-    getCategories().then((category) => setCategories(category.data));
+  const loadTreatTypes = () =>
+    getTreatTypes().then((treat_type) => setTreatTypes(treat_type.data));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createCategory({ name }, user.token)
+    createTreatType({ name }, user.token)
       .then((res) => {
         setName("");
         toast.success(`"${res.data.name}" is created`);
-        loadCategories();
+        loadTreatTypes();
       })
       .catch((error) => {
         console.log(error);
@@ -39,10 +39,10 @@ export default function Category() {
 
   const handleRemove = async (slug) => {
     if (window.confirm("Delete?")) {
-      deleteCategory(slug, user.token)
+      deleteTreatType(slug, user.token)
         .then((res) => {
           toast.error(`${res.data.name} deleted`);
-          loadCategories();
+          loadTreatTypes();
         })
         .catch((error) => {
           if (error.response.status === 400) {
@@ -57,20 +57,20 @@ export default function Category() {
     setSearchName(e.target.value.toLowerCase());
   };
 
-  const searched = (searchName) => (category) =>
-    category.name.toLowerCase().includes(searchName);
+  const searched = (searchName) => (treat_type) =>
+    treat_type.name.toLowerCase().includes(searchName);
 
   return (
     <div>
       <AdminNav />
       <div>
-        <h4>Add Category</h4>
+        <h4>Add Treat Type</h4>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             onChange={(e) => setName(e.target.value)}
             value={name}
-            placeholder="Category"
+            placeholder="Treat Type"
             autoFocus
             required
           />
@@ -83,13 +83,13 @@ export default function Category() {
           onChange={handleSearch}
         />
         <hr />
-        {categories.filter(searched(searchName)).map((category) => (
-          <div key={category._id}>
-            {category.name}
-            <span onClick={() => handleRemove(category.slug)}>
+        {treatTypes.filter(searched(searchName)).map((treatType) => (
+          <div key={treatType._id}>
+            {treatType.name}
+            <span onClick={() => handleRemove(treatType.slug)}>
               <DeleteOutlined />
             </span>
-            <Link to={`/admin/category/${category.slug}`}>
+            <Link to={`/admin/treat_type/${treatType.slug}`}>
               <span>
                 <EditOutlined />
               </span>
