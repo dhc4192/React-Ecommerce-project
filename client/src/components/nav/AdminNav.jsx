@@ -9,10 +9,10 @@ export default function AdminNav() {
           <Link to="/admin/dashboard">Dashboard</Link>
         </li>
         <li>
-          <Link to="/admin/product">Add Product</Link>
+          <Link to="/admin/products">Products</Link>
         </li>
         <li>
-          <Link to="/admin/products">Products</Link>
+          <Link to="/admin/product">Add Product</Link>
         </li>
         <li>
           <Link to="/admin/category">Categories</Link>

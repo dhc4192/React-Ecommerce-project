@@ -64,7 +64,7 @@ export default function Category() {
     <div>
       <AdminNav />
       <div>
-        <h4>Create category</h4>
+        <h4>Create Category</h4>
         <form onSubmit={handleSubmit}>
           <input
             type="text"

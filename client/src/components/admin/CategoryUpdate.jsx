@@ -33,9 +33,9 @@ export default function CategoryUpdate({ history, match }) {
   return (
     <div>
       <AdminNav />
-      <h4>Create category</h4>
+      <h4>Update Category</h4>
       <form onSubmit={handleSubmit}>
-        <label>Name</label>
+        <label>Category: </label>
         <input
           type="text"
           onChange={(e) => setName(e.target.value)}

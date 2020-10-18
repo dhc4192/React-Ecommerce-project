@@ -23,6 +23,7 @@ import Product from "./components/admin/Product";
 import Products from "./components/admin/Products";
 import SubCategory from "./components/admin/SubCategory";
 import CategoryUpdate from "./components/admin/CategoryUpdate";
+import SubCategoryUpdate from "./components/admin/SubCategoryUpdate";
 
 function App() {
   const dispatch = useDispatch();
@@ -73,6 +74,11 @@ function App() {
           exact
           path="/admin/category/:slug"
           component={CategoryUpdate}
+        />
+        <AdminRoute
+          exact
+          path="/admin/subcategory/:slug"
+          component={SubCategoryUpdate}
         />
       </Switch>
     </>
