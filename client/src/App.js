@@ -24,12 +24,14 @@ import Products from "./components/admin/Products";
 import FoodType from "./components/admin/FoodType";
 import TreatType from "./components/admin/TreatType";
 import SupplyType from "./components/admin/SupplyType";
-import SubCategory from "./components/admin/SubCategory";
+import ProductType from "./components/admin/ProductType";
 import BrandUpdate from "./components/admin/BrandUpdate";
+import SubCategory from "./components/admin/SubCategory";
 import CategoryUpdate from "./components/admin/CategoryUpdate";
 import FoodTypeUpdate from "./components/admin/FoodTypeUpdate";
 import TreatTypeUpdate from "./components/admin/TreatTypeUpdate";
 import SupplyTypeUpdate from "./components/admin/SupplyTypeUpdate";
+import ProductTypeUpdate from "./components/admin/ProductTypeUpdate";
 import SubCategoryUpdate from "./components/admin/SubCategoryUpdate";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -75,14 +77,21 @@ function App() {
         <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
         <AdminRoute exact path="/admin/category" component={Category} />
         <AdminRoute exact path="/admin/subcategory" component={SubCategory} />
+        <AdminRoute exact path="/admin/brand/" component={Brand} />
         <AdminRoute exact path="/admin/product" component={Product} />
         <AdminRoute exact path="/admin/products" component={Products} />
         <AdminRoute exact path="/admin/coupon" component={Coupons} />
-        <AdminRoute exact path="/admin/brand" component={Brand} />
         <AdminRoute exact path="/admin/food_type" component={FoodType} />
         <AdminRoute exact path="/admin/treat_type" component={TreatType} />
         <AdminRoute exact path="/admin/supply_type" component={SupplyType} />
+        <AdminRoute exact path="/admin/product_type/" component={ProductType} />
         <AdminRoute exact path="/admin/brand/:slug" component={BrandUpdate} />
+        <AdminRoute
+          exact
+          path="/admin/product_type/:slug"
+          component={ProductTypeUpdate}
+        />
+
         <AdminRoute
           exact
           path="/admin/food_type/:slug"

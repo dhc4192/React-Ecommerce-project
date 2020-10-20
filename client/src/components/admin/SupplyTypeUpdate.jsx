@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from "react";
+import AdminNav from "../nav/AdminNav";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { getSupplyType, updateSupplyType } from "../../services/supply_type";
-import AdminNav from "../nav/AdminNav";
 
-export default function CategoryUpdate({ history, match }) {
+export default function SupplyTypeUpdate({ match, history }) {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
+  const [productTypeRef, setProductTypeRef] = useState("");
 
   useEffect(() => {
-    loadSupplyType();
+    loadSupplyTypes();
   }, []);
 
-  const loadSupplyType = () =>
-    getSupplyType(match.params.slug).then((supply_type) =>
-      setName(supply_type.data.name)
-    );
+  const loadSupplyTypes = () =>
+    getSupplyType(match.params.slug).then((supply_type) => {
+      setName(supply_type.data.name);
+      setProductTypeRef(supply_type.data.productTypeRef);
+    });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateSupplyType(match.params.slug, { name }, user.token)
+    updateSupplyType(match.params.slug, { name, productTypeRef }, user.token)
       .then((res) => {
         setName("");
-        toast.success(`"${res.data.name}" has been updated`);
+        toast.success(`"${res.data.name}" is updated`);
         history.push("/admin/supply_type");
       })
       .catch((error) => {
@@ -35,7 +37,6 @@ export default function CategoryUpdate({ history, match }) {
       <AdminNav />
       <h4>Update Supply Type</h4>
       <form onSubmit={handleSubmit}>
-        <label>Supply Type: </label>
         <input
           type="text"
           onChange={(e) => setName(e.target.value)}
@@ -43,7 +44,7 @@ export default function CategoryUpdate({ history, match }) {
           autoFocus
           required
         />
-        <button>Save</button>
+        <button type="submit">Save</button>
       </form>
     </div>
   );

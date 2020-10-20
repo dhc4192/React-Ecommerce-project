@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { getCategories } from "../../services/category";
 import { getSubCategory, updateSubCategory } from "../../services/subcategory";
 
-const SubUpdate = ({ match, history }) => {
+export default function SubCategoryUpdate({ match, history }) {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
@@ -41,8 +41,8 @@ const SubUpdate = ({ match, history }) => {
   return (
     <div>
       <AdminNav />
-      <h4>Update Sub-Category</h4>
-      <label>Category: </label>
+      <h4>Update Pet Age</h4>
+      <label>Pet Type: </label>
       <select name="category" onChange={(e) => setCategoryRef(e.target.value)}>
         {categories.length > 0 &&
           categories.map((category) => (
@@ -60,7 +60,6 @@ const SubUpdate = ({ match, history }) => {
           type="text"
           onChange={(e) => setName(e.target.value)}
           value={name}
-          placeholder="Sub-Category"
           autoFocus
           required
         />
@@ -68,6 +67,4 @@ const SubUpdate = ({ match, history }) => {
       </form>
     </div>
   );
-};
-
-export default SubUpdate;
+}

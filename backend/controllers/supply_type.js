@@ -3,15 +3,17 @@ const slugify = require("slugify");
 
 exports.create = async (req, res) => {
   try {
-    const { name } = req.body;
-    res.json(await new SupplyType({ name, slug: slugify(name) }).save());
+    const { name, productTypeRef } = req.body;
+    res.json(
+      await new SupplyType({ name, productTypeRef, slug: slugify(name) }).save()
+    );
   } catch (error) {
     res.status(400).send("Supply Type: create failed");
   }
 };
 
 exports.list = async (req, res) => {
-  const supply_type = await SupplyType.find({}).sort({ createdAt: -1 }).exec();
+  const supply_type = await SupplyType.find({}).sort({ name: 1 }).exec();
   res.json(supply_type);
 };
 
@@ -21,11 +23,11 @@ exports.read = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const { name } = req.body;
+  const { name, productTypeRef } = req.body;
   try {
     const updated = await SupplyType.findOneAndUpdate(
       { slug: req.params.slug },
-      { name, slug: slugify(name) },
+      { name, productTypeRef, slug: slugify(name) },
       { new: true }
     );
     res.json(updated);

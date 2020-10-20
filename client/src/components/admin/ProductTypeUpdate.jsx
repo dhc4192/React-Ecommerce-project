@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { getCategory, updateCategory } from "../../services/category";
+import { getProductType, updateProductType } from "../../services/product_type";
 import AdminNav from "../nav/AdminNav";
 
-export default function CategoryUpdate({ history, match }) {
+export default function ProductTypeUpdate({ history, match }) {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
 
   useEffect(() => {
-    loadCategory();
+    loadProductTypes();
   }, []);
 
-  const loadCategory = () =>
-    getCategory(match.params.slug).then((category) =>
-      setName(category.data.name)
+  const loadProductTypes = () =>
+    getProductType(match.params.slug).then((product_type) =>
+      setName(product_type.data.name)
     );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateCategory(match.params.slug, { name }, user.token)
+    updateProductType(match.params.slug, { name }, user.token)
       .then((res) => {
         setName("");
         toast.success(`"${res.data.name}" has been updated`);
-        history.push("/admin/category");
+        history.push("/admin/product_type");
       })
       .catch((error) => {
         if (error.response.status === 400) toast.error(error.response.data);
@@ -33,9 +33,9 @@ export default function CategoryUpdate({ history, match }) {
   return (
     <div>
       <AdminNav />
-      <h4>Update Pet Type</h4>
+      <h4>Update Product Type</h4>
       <form onSubmit={handleSubmit}>
-        <label>Pet Type: </label>
+        <label>Product Type: </label>
         <input
           type="text"
           onChange={(e) => setName(e.target.value)}

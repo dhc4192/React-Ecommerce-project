@@ -6,8 +6,8 @@ export const getFoodTypes = async () =>
 export const getFoodType = async (slug) =>
   await axios.get(`${process.env.REACT_APP_API}/food_type/${slug}`);
 
-export const deleteFoodType = async (slug, authtoken) =>
-  await axios.delete(`${process.env.REACT_APP_API}/food_type/${slug}`, {
+export const createFoodType = async (food_type, authtoken) =>
+  await axios.post(`${process.env.REACT_APP_API}/food_type`, food_type, {
     headers: {
       authtoken,
     },
@@ -20,8 +20,8 @@ export const updateFoodType = async (slug, food_type, authtoken) =>
     },
   });
 
-export const createFoodType = async (food_type, authtoken) =>
-  await axios.post(`${process.env.REACT_APP_API}/food_type`, food_type, {
+export const deleteFoodType = async (slug, authtoken) =>
+  await axios.delete(`${process.env.REACT_APP_API}/food_type/${slug}`, {
     headers: {
       authtoken,
     },

@@ -1,13 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { authCheck, adminCheck } = require("../middlewares/auth");
-const {
-  create,
-  read,
-  update,
-  remove,
-  list,
-} = require("../controllers/brand");
+const { create, read, update, remove, list } = require("../controllers/brand");
 
 router.get("/brands", list);
 router.get("/brand/:slug", read);

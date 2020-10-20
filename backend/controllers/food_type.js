@@ -3,29 +3,29 @@ const slugify = require("slugify");
 
 exports.create = async (req, res) => {
   try {
-    const { name } = req.body;
-    res.json(await new FoodType({ name, slug: slugify(name) }).save());
-  } catch (error) {
+    const { name, productTypeRef } = req.body;
+    res.json(
+      await new FoodType({ name, productTypeRef, slug: slugify(name) }).save()
+    );
+  } catch (err) {
     res.status(400).send("Food Type: create failed");
   }
 };
 
-exports.list = async (req, res) => {
-  const food_type = await FoodType.find({}).sort({ createdAt: -1 }).exec();
-  res.json(food_type);
-};
+exports.list = async (req, res) =>
+  res.json(await FoodType.find({}).sort({ name: 1 }).exec());
 
 exports.read = async (req, res) => {
-  const food_type = await FoodType.findOne({ slug: req.params.slug }).exec();
+  let food_type = await FoodType.findOne({ slug: req.params.slug }).exec();
   res.json(food_type);
 };
 
 exports.update = async (req, res) => {
-  const { name } = req.body;
+  const { name, productTypeRef } = req.body;
   try {
     const updated = await FoodType.findOneAndUpdate(
       { slug: req.params.slug },
-      { name, slug: slugify(name) },
+      { name, productTypeRef, slug: slugify(name) },
       { new: true }
     );
     res.json(updated);
@@ -38,9 +38,9 @@ exports.remove = async (req, res) => {
   try {
     const deleted = await FoodType.findOneAndDelete({
       slug: req.params.slug,
-    }).exec();
+    });
     res.json(deleted);
-  } catch (error) {
+  } catch (err) {
     res.status(400).send("Food Type: delete failed");
   }
 };

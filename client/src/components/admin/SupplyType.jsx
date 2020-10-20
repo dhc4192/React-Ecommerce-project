@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { getProductTypes } from "../../services/product_type";
 import {
   createSupplyType,
   getSupplyTypes,
@@ -14,18 +15,26 @@ export default function SupplyType() {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
   const [supplyTypes, setSupplyTypes] = useState([]);
+  const [productTypes, setProductTypes] = useState([]);
+  const [productTypeRef, setProductTypeRef] = useState("");
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
+    loadProductTypes();
     loadSupplyTypes();
   }, []);
 
+  const loadProductTypes = () =>
+    getProductTypes().then((productTypeRef) =>
+      setProductTypes(productTypeRef.data)
+    );
+
   const loadSupplyTypes = () =>
-    getSupplyTypes().then((supply_type) => setSupplyTypes(supply_type.data));
+    getSupplyTypes().then((supplyType) => setSupplyTypes(supplyType.data));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createSupplyType({ name }, user.token)
+    createSupplyType({ name, productTypeRef }, user.token)
       .then((res) => {
         setName("");
         toast.success(`"${res.data.name}" is created`);
@@ -57,14 +66,26 @@ export default function SupplyType() {
     setSearchName(e.target.value.toLowerCase());
   };
 
-  const searched = (searchName) => (supply_type) =>
-    supply_type.name.toLowerCase().includes(searchName);
+  const searched = (searchName) => (supplyType) =>
+    supplyType.name.toLowerCase().includes(searchName);
 
   return (
     <div>
       <AdminNav />
       <div>
-        <h4>Add Supply Type</h4>
+        <h4>Supply Type</h4>
+        <div>
+          <label>Product Type: </label>
+          <select onChange={(e) => setProductTypeRef(e.target.value)}>
+            <option>Please Select</option>
+            {productTypes.length > 0 &&
+              productTypes.map((product_type) => (
+                <option key={product_type._id} value={product_type._id}>
+                  {product_type.name}
+                </option>
+              ))}
+          </select>
+        </div>
         <form onSubmit={handleSubmit}>
           <input
             type="text"

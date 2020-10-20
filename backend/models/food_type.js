@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const foodTypeSchema = new mongoose.Schema(
   {
@@ -15,8 +16,13 @@ const foodTypeSchema = new mongoose.Schema(
       lowercase: true,
       index: true,
     },
+    productTypeRef: {
+      type: ObjectId,
+      ref: "ProductType",
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("FoodType", foodTypeSchema);
+module.exports = mongoose.model("FoodTypes", foodTypeSchema);

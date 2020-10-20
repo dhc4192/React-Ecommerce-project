@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { getProductTypes } from "../../services/product_type";
 import {
   createFoodType,
   getFoodTypes,
@@ -14,18 +15,26 @@ export default function FoodType() {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
   const [foodTypes, setFoodTypes] = useState([]);
+  const [productTypes, setProductTypes] = useState([]);
+  const [productTypeRef, setProductTypeRef] = useState("");
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
+    loadProductTypes();
     loadFoodTypes();
   }, []);
 
+  const loadProductTypes = () =>
+    getProductTypes().then((productTypeRef) =>
+      setProductTypes(productTypeRef.data)
+    );
+
   const loadFoodTypes = () =>
-    getFoodTypes().then((food_type) => setFoodTypes(food_type.data));
+    getFoodTypes().then((foodType) => setFoodTypes(foodType.data));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createFoodType({ name }, user.token)
+    createFoodType({ name, productTypeRef }, user.token)
       .then((res) => {
         setName("");
         toast.success(`"${res.data.name}" is created`);
@@ -57,14 +66,26 @@ export default function FoodType() {
     setSearchName(e.target.value.toLowerCase());
   };
 
-  const searched = (searchName) => (food_type) =>
-    food_type.name.toLowerCase().includes(searchName);
+  const searched = (searchName) => (foodType) =>
+    foodType.name.toLowerCase().includes(searchName);
 
   return (
     <div>
       <AdminNav />
       <div>
         <h4>Add Food Type</h4>
+        <div>
+          <label>Product Type: </label>
+          <select onChange={(e) => setProductTypeRef(e.target.value)}>
+            <option>Please Select</option>
+            {productTypes.length > 0 &&
+              productTypes.map((product_type) => (
+                <option key={product_type._id} value={product_type._id}>
+                  {product_type.name}
+                </option>
+              ))}
+          </select>
+        </div>
         <form onSubmit={handleSubmit}>
           <input
             type="text"

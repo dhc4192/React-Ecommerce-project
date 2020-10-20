@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema;
 
-const supplyTypeSchema = new mongoose.Schema(
+const productTypeSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -16,13 +15,8 @@ const supplyTypeSchema = new mongoose.Schema(
       lowercase: true,
       index: true,
     },
-    productTypeRef: {
-      type: ObjectId,
-      ref: "ProductType",
-      required: true,
-    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("SupplyTypes", supplyTypeSchema);
+module.exports = mongoose.model("ProductType", productTypeSchema);

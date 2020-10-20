@@ -1,5 +1,6 @@
 const Product = require("../models/product");
 const slugify = require("slugify");
+const { db } = require("../models/product");
 
 exports.create = async (req, res) => {
   try {

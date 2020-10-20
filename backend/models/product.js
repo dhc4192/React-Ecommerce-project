@@ -6,38 +6,32 @@ const productSchema = new mongoose.Schema(
     title: {
       type: String,
       trim: true,
-      required: true,
       maxlength: 32,
       text: true,
     },
     slug: {
       type: String,
-      unique: true,
       lowercase: true,
       index: true,
     },
     description: {
       type: String,
-      required: true,
       maxlength: 2000,
       text: true,
     },
     nutrition: {
       type: String,
-      required: true,
       maxlength: 2000,
       text: true,
     },
     price: {
       type: Number,
-      required: true,
       trim: true,
       maxlength: 32,
     },
     size: {
       type: String,
       trim: true,
-      required: true,
       maxlength: 32,
       text: true,
     },
@@ -48,6 +42,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    product_type: {
+      type: ObjectId,
+      ref: "ProductType",
+    },
     shipping: {
       type: String,
       enum: ["Yes", "No"],
@@ -56,7 +54,7 @@ const productSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "Brand",
     },
-    food_type: {
+    food_types: {
       type: ObjectId,
       ref: "FoodType",
     },

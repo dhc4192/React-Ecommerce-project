@@ -4,10 +4,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { createProduct } from "../../services/product";
 import { getCategories, getSubCategories } from "../../services/category";
-import { getBrands } from "../../services/brand";
-import { getFoodTypes } from "../../services/food_type";
-import { getTreatTypes } from "../../services/treat_type";
-import { getSupplyTypes } from "../../services/supply_type";
+import { getProductTypes, getFoodTypes } from "../../services/product_type";
 import { Select } from "antd";
 
 const { Option } = Select;
@@ -15,52 +12,42 @@ const { Option } = Select;
 export default function Product() {
   const { user } = useSelector((state) => ({ ...state }));
   const [subCatOptions, setSubCatOptions] = useState([]);
+  const [foodTypeOptions, setFoodTypeOptions] = useState([]);
   const [showSubcategory, setShowSubcategory] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [productTypes, setProductTypes] = useState([]);
 
   const [values, setValues] = useState({
     title: "",
     description: "",
     nutrition: "",
-    food_type: "",
-    treat_type: "",
-    supply_type: "",
     price: "",
     size: "",
     shipping: "",
     quantity: "",
-    brand: "",
     category: "",
+    treat_types: "",
+    supply_types: "",
     images: [],
-    categories: [],
+    food_types: "",
     subcategories: [],
   });
 
   useEffect(() => {
-    loadCategories();
-    loadBrands();
-    loadFoodTypes();
-    loadTreatTypes();
-    loadSupplyTypes();
+    const apiCall = async () => {
+      // const foodTypeData = await getFoodTypes();
+      // const treatTypeData = await getTreatTypes();
+      // const supplyTypeData = await getSupplyTypes();
+      const categoryData = await getCategories();
+      const productTypeData = await getProductTypes();
+      // setFoodTypes(foodTypeData.data);
+      // setTreatTypes(treatTypeData.data);
+      // setSupplyTypes(supplyTypeData.data);
+      setCategories(categoryData.data);
+      setProductTypes(productTypeData.data);
+    };
+    apiCall();
   }, []);
-
-  const loadCategories = () =>
-    getCategories().then((category) =>
-      setValues({ ...values, categories: category.data })
-    );
-  const loadBrands = () =>
-    getBrands().then((brand) => setValues({ ...values, brands: brand.data }));
-  const loadFoodTypes = () =>
-    getFoodTypes().then((food_type) =>
-      setValues({ ...values, food_types: food_type.data })
-    );
-  const loadTreatTypes = () =>
-    getTreatTypes().then((food_type) =>
-      setValues({ ...values, food_types: food_type.data })
-    );
-  const loadSupplyTypes = () =>
-    getSupplyTypes().then((supply_type) =>
-      setValues({ ...values, supply_types: supply_type.data })
-    );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -88,6 +75,14 @@ export default function Product() {
     });
     setShowSubcategory(true);
   };
+  const handleProductTypeChange = (e) => {
+    e.preventDefault();
+    setValues({ ...values, food_types: "", product_type: e.target.value });
+    getFoodTypes(e.target.value).then((res) => {
+      setFoodTypeOptions(res.data);
+    });
+    // setShowSubcategory(true);
+  };
 
   return (
     <div>
@@ -100,20 +95,6 @@ export default function Product() {
           name="title"
           value={values.title}
           placeholder="Name"
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="brand"
-          value={values.brand}
-          placeholder="Brand"
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="product_type"
-          value={values.product_type}
-          placeholder="Product Type"
           onChange={handleChange}
         />
         <input
@@ -155,38 +136,52 @@ export default function Product() {
           placeholder="Nutrition"
           onChange={handleChange}
         />
-        <select name="food" onChange={handleChange}>
-          <option>Please select</option>
-          {values.food_type.length > 0 &&
-            values.food_type.map((food) => (
-              <option key={food._id} value={food._id}>
-                {food.name}
-              </option>
-            ))}
-        </select>
-
         <label>Shipping: </label>
         <select name="shipping" onChange={handleChange}>
           <option>Please select</option>
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
-        <label>Category: </label>
+
+        <hr />
+
+        <label>Product Type: </label>
+        <select name="product_type" onChange={handleProductTypeChange}>
+          {productTypes.map((product_type) => (
+            <option key={product_type._id} value={product_type._id}>
+              {product_type.name}
+            </option>
+          ))}
+        </select>
+
+        <label>Food Type: </label>
+        <Select
+          style={{ width: "200px" }}
+          placeholder="Please Select"
+          value={values.food_types}
+          onChange={(value) => setValues({ ...values, food_types: value })}
+        >
+          {foodTypeOptions.map((food_type) => (
+            <Option key={food_type._id} value={food_type._id}>
+              {food_type.name}
+            </Option>
+          ))}
+        </Select>
+
+        <label>Pet Type: </label>
         <select name="category" onChange={handleCategoryChange}>
           <option>Please select</option>
-          {values.categories.length > 0 &&
-            values.categories.map((category) => (
-              <option key={category._id} value={category._id}>
-                {category.name}
-              </option>
-            ))}
+          {categories.map((category) => (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          ))}
         </select>
         {showSubcategory && (
           <div>
-            <label>Sub-Categories: </label>
+            <label>Product Type: </label>
             <Select
-              mode="multiple"
-              style={{ width: "100%" }}
+              style={{ width: "500px" }}
               placeholder="Select one or more"
               value={values.subcategories}
               onChange={(value) =>

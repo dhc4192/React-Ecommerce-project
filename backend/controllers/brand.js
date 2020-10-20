@@ -11,7 +11,7 @@ exports.create = async (req, res) => {
 };
 
 exports.list = async (req, res) => {
-  const brand = await Brand.find({}).sort({ createdAt: -1 }).exec();
+  const brand = await Brand.find({}).sort({ name: 1 }).exec();
   res.json(brand);
 };
 
@@ -44,4 +44,3 @@ exports.remove = async (req, res) => {
     res.status(400).send("Brand: delete failed");
   }
 };
-

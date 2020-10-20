@@ -4,32 +4,34 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
-  createCategory,
-  getCategories,
-  deleteCategory,
-} from "../../services/category";
+  createProductType,
+  getProductTypes,
+  deleteProductType,
+} from "../../services/product_type";
 import AdminNav from "../nav/AdminNav";
 
 export default function Category() {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [productTypes, setProductTypes] = useState([]);
   const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
-    loadCategories();
+    loadProductTypes();
   }, []);
 
-  const loadCategories = () =>
-    getCategories().then((category) => setCategories(category.data));
+  const loadProductTypes = () =>
+    getProductTypes().then((product_type) =>
+      setProductTypes(product_type.data)
+    );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createCategory({ name }, user.token)
+    createProductType({ name }, user.token)
       .then((res) => {
         setName("");
         toast.success(`"${res.data.name}" is created`);
-        loadCategories();
+        loadProductTypes();
       })
       .catch((error) => {
         console.log(error);
@@ -39,10 +41,10 @@ export default function Category() {
 
   const handleRemove = async (slug) => {
     if (window.confirm("Delete?")) {
-      deleteCategory(slug, user.token)
+      deleteProductType(slug, user.token)
         .then((res) => {
           toast.error(`${res.data.name} deleted`);
-          loadCategories();
+          loadProductTypes();
         })
         .catch((error) => {
           if (error.response.status === 400) {
@@ -57,20 +59,20 @@ export default function Category() {
     setSearchName(e.target.value.toLowerCase());
   };
 
-  const searched = (searchName) => (category) =>
-    category.name.toLowerCase().includes(searchName);
+  const searched = (searchName) => (product_type) =>
+    product_type.name.toLowerCase().includes(searchName);
 
   return (
     <div>
       <AdminNav />
       <div>
-        <h4>Pet Types</h4>
+        <h4>Product Type</h4>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             onChange={(e) => setName(e.target.value)}
             value={name}
-            placeholder="Pet type"
+            placeholder="Product Type"
             autoFocus
             required
           />
@@ -83,13 +85,13 @@ export default function Category() {
           onChange={handleSearch}
         />
         <hr />
-        {categories.filter(searched(searchName)).map((category) => (
-          <div key={category._id}>
-            {category.name}
-            <span onClick={() => handleRemove(category.slug)}>
+        {productTypes.filter(searched(searchName)).map((product_type) => (
+          <div key={product_type._id}>
+            {product_type.name}
+            <span onClick={() => handleRemove(product_type.slug)}>
               <DeleteOutlined />
             </span>
-            <Link to={`/admin/category/${category.slug}`}>
+            <Link to={`/admin/product_type/${product_type.slug}`}>
               <span>
                 <EditOutlined />
               </span>

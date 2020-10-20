@@ -73,9 +73,9 @@ export default function SubCategory() {
     <div>
       <AdminNav />
       <div>
-        <h4>Add Sub-Category</h4>
+        <h4>Pet Age</h4>
         <div>
-          <label>Category: </label>
+          <label>Pet Type: </label>
           <select onChange={(e) => setCategoryRef(e.target.value)}>
             <option>Please Select</option>
             {categories.length > 0 &&
@@ -91,7 +91,7 @@ export default function SubCategory() {
             type="text"
             onChange={(e) => setName(e.target.value)}
             value={name}
-            placeholder="Sub-Category"
+            placeholder="Pet Age"
             autoFocus
             required
           />

@@ -30,3 +30,8 @@ export const createSubCategory = async (subcategory, authtoken) =>
       authtoken,
     },
   });
+
+export const getProductCategories = async (_id) =>
+  await axios.get(
+    `${process.env.REACT_APP_API}/subcategory/product_categories/${_id}`
+  );
