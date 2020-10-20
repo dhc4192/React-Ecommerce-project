@@ -4,7 +4,10 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { createProduct } from "../../services/product";
 import { getCategories, getSubCategories } from "../../services/category";
-import { getProductTypes, getFoodTypes } from "../../services/product_type";
+import {
+  getProductCategories,
+  getProductTypes,
+} from "../../services/product_category";
 import { Select } from "antd";
 
 const { Option } = Select;
@@ -12,10 +15,11 @@ const { Option } = Select;
 export default function Product() {
   const { user } = useSelector((state) => ({ ...state }));
   const [subCatOptions, setSubCatOptions] = useState([]);
-  const [foodTypeOptions, setFoodTypeOptions] = useState([]);
+  const [productTypeOptions, setProductTypeOptions] = useState([]);
   const [showSubcategory, setShowSubcategory] = useState(false);
+  const [showProductType, setShowProductType] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [productTypes, setProductTypes] = useState([]);
+  const [productCategories, setProductCategories] = useState([]);
 
   const [values, setValues] = useState({
     title: "",
@@ -26,25 +30,17 @@ export default function Product() {
     shipping: "",
     quantity: "",
     category: "",
-    treat_types: "",
-    supply_types: "",
+    product_types: [],
     images: [],
-    food_types: "",
     subcategories: [],
   });
 
   useEffect(() => {
     const apiCall = async () => {
-      // const foodTypeData = await getFoodTypes();
-      // const treatTypeData = await getTreatTypes();
-      // const supplyTypeData = await getSupplyTypes();
       const categoryData = await getCategories();
-      const productTypeData = await getProductTypes();
-      // setFoodTypes(foodTypeData.data);
-      // setTreatTypes(treatTypeData.data);
-      // setSupplyTypes(supplyTypeData.data);
+      const productCategoryData = await getProductCategories();
       setCategories(categoryData.data);
-      setProductTypes(productTypeData.data);
+      setProductCategories(productCategoryData.data);
     };
     apiCall();
   }, []);
@@ -75,13 +71,17 @@ export default function Product() {
     });
     setShowSubcategory(true);
   };
-  const handleProductTypeChange = (e) => {
+  const handleProductCategoryChange = (e) => {
     e.preventDefault();
-    setValues({ ...values, food_types: "", product_type: e.target.value });
-    getFoodTypes(e.target.value).then((res) => {
-      setFoodTypeOptions(res.data);
+    setValues({
+      ...values,
+      product_types: [],
+      product_category: e.target.value,
     });
-    // setShowSubcategory(true);
+    getProductTypes(e.target.value).then((res) => {
+      setProductTypeOptions(res.data);
+    });
+    setShowProductType(true);
   };
 
   return (
@@ -89,6 +89,7 @@ export default function Product() {
       <AdminNav />
       <h4>Add Product</h4>
       <hr />
+      <label>Name: </label>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -97,6 +98,7 @@ export default function Product() {
           placeholder="Name"
           onChange={handleChange}
         />
+        <label>Price: </label>
         <input
           type="number"
           name="price"
@@ -104,6 +106,7 @@ export default function Product() {
           placeholder="Price"
           onChange={handleChange}
         />
+        <label>Size: </label>
         <input
           type="text"
           name="size"
@@ -111,6 +114,7 @@ export default function Product() {
           placeholder="Size"
           onChange={handleChange}
         />
+        <label>Quantity: </label>
         <input
           type="number"
           name="quantity"
@@ -118,6 +122,7 @@ export default function Product() {
           placeholder="Quantity"
           onChange={handleChange}
         />
+        <label>Description: </label>
         <textarea
           type="text"
           cols="20"
@@ -127,6 +132,7 @@ export default function Product() {
           placeholder="Description"
           onChange={handleChange}
         />
+        <label>Nutrition: </label>
         <textarea
           type="text"
           cols="20"
@@ -142,35 +148,35 @@ export default function Product() {
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
-
         <hr />
-
-        <label>Product Type: </label>
-        <select name="product_type" onChange={handleProductTypeChange}>
-          {productTypes.map((product_type) => (
-            <option key={product_type._id} value={product_type._id}>
-              {product_type.name}
+        <label>Product Category: </label>
+        <select name="product_category" onChange={handleProductCategoryChange}>
+          <option>--Please select--</option>
+          {productCategories.map((product_category) => (
+            <option key={product_category._id} value={product_category._id}>
+              {product_category.name}
             </option>
           ))}
         </select>
-
-        <label>Food Type: </label>
-        <Select
-          style={{ width: "200px" }}
-          placeholder="Please Select"
-          value={values.food_types}
-          onChange={(value) => setValues({ ...values, food_types: value })}
-        >
-          {foodTypeOptions.map((food_type) => (
-            <Option key={food_type._id} value={food_type._id}>
-              {food_type.name}
-            </Option>
-          ))}
-        </Select>
-
+        <div>
+          <label>Product Type: </label>
+          <Select
+            style={{ width: "300px" }}
+            placeholder="---Please Select---"
+            value={values.product_types}
+            onChange={(value) => setValues({ ...values, product_types: value })}
+          >
+            {productTypeOptions.length &&
+              productTypeOptions.map((product_type) => (
+                <Option key={product_type._id} value={product_type._id}>
+                  {product_type.name}
+                </Option>
+              ))}
+          </Select>
+        </div>
         <label>Pet Type: </label>
         <select name="category" onChange={handleCategoryChange}>
-          <option>Please select</option>
+          <option>--Please select--</option>
           {categories.map((category) => (
             <option key={category._id} value={category._id}>
               {category.name}
@@ -179,10 +185,10 @@ export default function Product() {
         </select>
         {showSubcategory && (
           <div>
-            <label>Product Type: </label>
+            <label>Pet Age: </label>
             <Select
-              style={{ width: "500px" }}
-              placeholder="Select one or more"
+              style={{ width: "300px" }}
+              placeholder="---Please Select---"
               value={values.subcategories}
               onChange={(value) =>
                 setValues({ ...values, subcategories: value })

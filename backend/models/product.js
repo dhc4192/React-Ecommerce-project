@@ -42,9 +42,9 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    product_type: {
+    product_category: {
       type: ObjectId,
-      ref: "ProductType",
+      ref: "ProductCategory",
     },
     shipping: {
       type: String,
@@ -54,18 +54,12 @@ const productSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "Brand",
     },
-    food_types: {
-      type: ObjectId,
-      ref: "FoodType",
-    },
-    treat_type: {
-      type: ObjectId,
-      ref: "TreatType",
-    },
-    supply_type: {
-      type: ObjectId,
-      ref: "SupplyType",
-    },
+    product_types: [
+      {
+        type: ObjectId,
+        ref: "ProductType",
+      },
+    ],
     category: {
       type: ObjectId,
       ref: "Category",

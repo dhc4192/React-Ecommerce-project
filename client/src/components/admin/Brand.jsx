@@ -59,7 +59,7 @@ export default function Brand() {
     <div>
       <AdminNav />
       <div>
-        <h4>Add Brand</h4>
+        <h4>Brand</h4>
         <form onSubmit={handleSubmit}>
           <input
             type="text"

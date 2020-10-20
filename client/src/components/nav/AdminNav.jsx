@@ -15,25 +15,19 @@ export default function AdminNav() {
           <Link to="/admin/product">Add Product</Link>
         </li>
         <li>
-          <Link to="/admin/brand">Brands</Link>
-        </li>
-        <li>
           <Link to="/admin/category">Pet Types</Link>
         </li>
         <li>
           <Link to="/admin/subcategory">Pet Ages</Link>
         </li>
         <li>
+          <Link to="/admin/product_category">Product Categories</Link>
+        </li>
+        <li>
           <Link to="/admin/product_type">Product Types</Link>
         </li>
         <li>
-          <Link to="/admin/food_type">Food Types</Link>
-        </li>
-        <li>
-          <Link to="/admin/treat_type">Treat Types</Link>
-        </li>
-        <li>
-          <Link to="/admin/supply_type">Supply Types</Link>
+          <Link to="/admin/brand">Brands</Link>
         </li>
         <li>
           <Link to="/admin/coupon">Add Coupons</Link>

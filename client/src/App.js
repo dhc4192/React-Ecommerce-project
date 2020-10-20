@@ -21,17 +21,13 @@ import Product from "./components/admin/Product";
 import Coupons from "./components/admin/Coupons";
 import Category from "./components/admin/Category";
 import Products from "./components/admin/Products";
-import FoodType from "./components/admin/FoodType";
-import TreatType from "./components/admin/TreatType";
-import SupplyType from "./components/admin/SupplyType";
 import ProductType from "./components/admin/ProductType";
+import ProductCategory from "./components/admin/ProductCategory";
 import BrandUpdate from "./components/admin/BrandUpdate";
 import SubCategory from "./components/admin/SubCategory";
 import CategoryUpdate from "./components/admin/CategoryUpdate";
-import FoodTypeUpdate from "./components/admin/FoodTypeUpdate";
-import TreatTypeUpdate from "./components/admin/TreatTypeUpdate";
-import SupplyTypeUpdate from "./components/admin/SupplyTypeUpdate";
 import ProductTypeUpdate from "./components/admin/ProductTypeUpdate";
+import ProductCategoryUpdate from "./components/admin/ProductCategoryUpdate";
 import SubCategoryUpdate from "./components/admin/SubCategoryUpdate";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -81,31 +77,27 @@ function App() {
         <AdminRoute exact path="/admin/product" component={Product} />
         <AdminRoute exact path="/admin/products" component={Products} />
         <AdminRoute exact path="/admin/coupon" component={Coupons} />
-        <AdminRoute exact path="/admin/food_type" component={FoodType} />
-        <AdminRoute exact path="/admin/treat_type" component={TreatType} />
-        <AdminRoute exact path="/admin/supply_type" component={SupplyType} />
-        <AdminRoute exact path="/admin/product_type/" component={ProductType} />
+
+
+
+
+        <AdminRoute exact path="/admin/product_type" component={ProductType} />
+        <AdminRoute
+          exact
+          path="/admin/product_category/"
+          component={ProductCategory}
+        />
         <AdminRoute exact path="/admin/brand/:slug" component={BrandUpdate} />
         <AdminRoute
           exact
-          path="/admin/product_type/:slug"
-          component={ProductTypeUpdate}
+          path="/admin/product_category/:slug"
+          component={ProductCategoryUpdate}
         />
 
         <AdminRoute
           exact
-          path="/admin/food_type/:slug"
-          component={FoodTypeUpdate}
-        />
-        <AdminRoute
-          exact
-          path="/admin/treat_type/:slug"
-          component={TreatTypeUpdate}
-        />
-        <AdminRoute
-          exact
-          path="/admin/supply_type/:slug"
-          component={SupplyTypeUpdate}
+          path="/admin/product_type/:slug"
+          component={ProductTypeUpdate}
         />
         <AdminRoute
           exact
